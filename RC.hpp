@@ -47,6 +47,7 @@ class RC{
 
     
     void PopulateBoard();
+    void DrawRCCar();
     void DrawRCCar(int,int);
 
     //Car Movements
@@ -54,6 +55,7 @@ class RC{
     void MoveBack();
     void TurnLeft();
     void TurnRight();
+    void Show();
   
 };
 

@@ -20,7 +20,7 @@ void RC_initialize(std::string fileName, bool usingRC){
 } 
 
 void RC_finalize(){
-  CAR->RCWorldImage().ShowUntilClosed();
+  CAR->RCWorldImage().ShowUntilClosed("COMPLETE");
 }
 
 void RC_accelerate(){
@@ -46,5 +46,15 @@ void RCMoveForward(){
   CAR->MoveForward();
 }
 
+void RCMoveBackward(){
+  CAR->MoveBack();
+}
+void RCTurnLeft(){
+  CAR->TurnLeft();
+}
+
+void RCTurnRight(){
+  CAR->TurnRight();
+}
 
 #endif
