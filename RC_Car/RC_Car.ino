@@ -1,12 +1,13 @@
 #include <SPI.h>
 #include <WiFiNINA.h>
+#include "vector.hpp"
 
 // WIFI Settings 
-const char ssid[] = "Emac";      // Change this to your Wifi settings
-const char pass[] = "eanisagod"; // Change this to your Wifi settings 
+const char ssid[] = "Emac"; //"FiOS-WDRJY";      // Change this to your Wifi settings
+const char pass[] = "eanisagod"; //way79mouth4146pay; // Change this to your Wifi settings 
 int status = WL_IDLE_STATUS; // Used to check connection Statuses 
-
-
+WiFiClient client;
+Vector<char> c;
 // Right Motor Pins
 const int enA = 10;
 const int in1 = 4;
@@ -19,7 +20,6 @@ const int in4 = 5;
 
 bool notRan;
 /*================MOVEMENT FUNCTIONS===================*/
-
 void moveForward(int speed);
 void moveBackward(int speed);
 void halt();
@@ -33,16 +33,18 @@ void spinMoveBaby();
 
 void printWifiData();
 bool pingTest();
+void testServerConnect(char severname[]);
 
 
 void setup() 
 {
   Serial.begin(9600);
-  int connectionAttempts = 1;
+  int connectionAttempts = 0;
 
   // Try to establish a WIFI Connection
   while ( status != WL_CONNECTED) 
   {
+    connectionAttempts++;
     Serial.print("Attempting to connect to SSID: ");
     Serial.println(ssid);
     Serial.print("Attempt #");
@@ -54,13 +56,14 @@ void setup()
     // Wait 10 seconds for connection:
     delay(10000);
     if(status != WL_CONNECTED)
-        Serial.print("Connection failed... Attempting Again");
+        Serial.println("Connection failed... Attempting Again");
   }
   Serial.println("CONNECTION SUCCESS!");
 
   // Attempt to ping Google
   while(!pingTest());
-  
+  byte arr[4] = {54,183,187,155};
+  testServerConnect(arr);
   pinMode(enA, OUTPUT);
   pinMode(in1, OUTPUT);
   pinMode(in2, OUTPUT);
@@ -75,9 +78,18 @@ void setup()
 void loop() 
 {
   int speed = 255; // NOTE: range from 0 - 255
-  if(notRan)
-    
+  delay(3000);
+  while(client.available())
+  {
+    c.push_back(client.read());
+  }
   
+  if(notRan)
+  {
+    Serial.println(c.getSize());
+    Serial.println("MADE IT IN HERE");
+    c.display_contents();
+  } 
   notRan = false;
 }
 
@@ -227,4 +239,22 @@ bool pingTest()
   }
 
   return true;
+}
+
+void testServerConnect(byte servername[])
+{
+  // 54.183.187.155
+  if (client.connect({54,183,187,155}, 80)) 
+  {
+      Serial.println("Connected to AWS Server!");
+      Serial.println("Getting Data from server...");
+      //Serial.println("Pushing Data to server...");
+      client.println("GET /rc.txt HTTP/1.0");
+      //client.println("POST /var/www/html/testText.txt HTTP/1.1");
+      client.println();
+  }
+  else
+  {
+      Serial.println("SERVER CONNECTION FAILED");
+  }
 }
