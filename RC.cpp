@@ -33,14 +33,23 @@ void RC::PopulateBoard(){
   //color constants
   const graphics::Color kWallColor(50, 50, 50);
   const graphics::Color backGroundColor(245,245,245);
+  const graphics::Color green1(18,148,71);
+  const graphics::Color green2(39,159,0);
 
   CAR->RCWorldImage().DrawRectangle(0,0,XDim_-1,YDim_-1,backGroundColor);
   //Horizontal Lines
   for(int i = 0; i <YDim_/pxPerCell_;i++){
     int x = pxPerCell_*NumOfHorizontalLines_-1;
     int y = i*pxPerCell_;
+    // std::cout << "X: " << x << " Y: " << y << "\n";
     CAR->RCWorldImage().DrawLine(0,y,x,y,kWallColor,wallThickness_);
+    if(y%100== 0)
+      CAR->RCWorldImage().DrawRectangle(0,y,x,pxPerCell_,green1);
+    else
+      CAR->RCWorldImage().DrawRectangle(0,y,x,pxPerCell_,green2);
+    
   }
+
   //Verticle Lines
   for(int i = 0; i < XDim_/pxPerCell_;i++){
     int x = i*pxPerCell_;
@@ -58,40 +67,120 @@ void RC::DrawRCCar(int x_pixel, int y_pixel){
 
   switch(position_.orientation_){
     case Direction::North:{
-      graphics::Color red (255,0,0);
-      CAR->RCWorldImage().DrawCircle(x_pixel,y_pixel,12,red);
       
+      //Offset consts to make sure the color is set in the center of the square
+      const int widthOffset = 30;
+      const int heightOffset = 32;
+
+      graphics::Image upCarImage;
+      upCarImage.Load("/Users/janeenyamak/Documents/Embedded-Sys-Visualizer/resources/up.bmp");
+
+      graphics::Color black(0,0,0);
+
+      int temp = y_pixel;
+      for(int i = 0; i < upCarImage.GetWidth(); i++ ){
+        for(int j = 0; j < upCarImage.GetHeight(); j++){
+            graphics::Color color = upCarImage.GetColor(i,j);
+            if(color != black){
+              CAR->RCWorldImage().SetColor(x_pixel-widthOffset,y_pixel-heightOffset,color);
+            }
+            y_pixel++;
+            
+        }
+        y_pixel = temp;
+        x_pixel++;
+      }
       break; 
     }
       
     case Direction::East:{
-      graphics::Color green (0,255,0);
-      CAR->RCWorldImage().DrawCircle(x_pixel,y_pixel,12,green);
+      
+      //Offset consts to make sure the color is set in the center of the square
+      const int widthOffset = 32;
+      const int heightOffset = 30;
+
+      graphics::Image rightCarImage;
+      rightCarImage.Load("/Users/janeenyamak/Documents/Embedded-Sys-Visualizer/resources/right.bmp");
+
+      graphics::Color black(0,0,0);
+
+      int temp = y_pixel;
+      for(int i = 0; i < rightCarImage.GetWidth(); i++ ){
+        for(int j = 0; j < rightCarImage.GetHeight(); j++){
+            graphics::Color color = rightCarImage.GetColor(i,j);
+            if(color != black){
+              CAR->RCWorldImage().SetColor(x_pixel-widthOffset,y_pixel-heightOffset,color);
+            }
+            y_pixel++;
+        }
+        y_pixel = temp;
+        x_pixel++;
+      }
       break; 
     }
     case Direction::West:{
-      graphics::Color blue (0,0,128);
-      CAR->RCWorldImage().DrawCircle(x_pixel,y_pixel,12,blue);
+
+      //Offset consts to make sure the color is set in the center of the square
+      const int widthOffset = 30;
+      const int heightOffset = 30;
+      
+      graphics::Image leftCarImage;
+      leftCarImage.Load("/Users/janeenyamak/Documents/Embedded-Sys-Visualizer/resources/left.bmp");
+
+      graphics::Color black(0,0,0);
+
+      int temp = y_pixel;
+      for(int i = 0; i < leftCarImage.GetWidth(); i++ ){
+        for(int j = 0; j < leftCarImage.GetHeight(); j++){
+            graphics::Color color = leftCarImage.GetColor(i,j);
+            if(color != black){
+              CAR->RCWorldImage().SetColor(x_pixel-widthOffset,y_pixel-heightOffset,color);
+            }
+            y_pixel++;
+        }
+        y_pixel = temp;
+        x_pixel++;
+      }
       break;
     }
     case Direction::South:{
-      graphics::Color purple (128,0,128);
-      CAR->RCWorldImage().DrawCircle(x_pixel,y_pixel,12,purple);
+      
+      //Offset consts to make sure the color is set in the center of the square
+      const int widthOffset = 32;
+      const int heightOffset = 30;
+
+      graphics::Image downCarImage;
+      downCarImage.Load("/Users/janeenyamak/Documents/Embedded-Sys-Visualizer/resources/down.bmp");
+
+      graphics::Color black(0,0,0);
+
+      int temp = y_pixel;
+      for(int i = 0; i < downCarImage.GetWidth(); i++ ){
+        for(int j = 0; j < downCarImage.GetHeight(); j++){
+            graphics::Color color = downCarImage.GetColor(i,j);
+            if(color != black){
+              CAR->RCWorldImage().SetColor(x_pixel-widthOffset,y_pixel-heightOffset,color);
+            }
+            y_pixel++;
+        }
+        y_pixel = temp;
+        x_pixel++;
+      }
       break;
     }
   }
+  Show();
 }
 
 void RC::MoveForward(){
   switch(position_.orientation_){
 
     case Direction::North:{
-      if(position_.x_==0){
+      if(position_.y_==-1){
         std::cout << "ERROR cannot move north\n"; //x will be out of bounds
       }
       else{
         position_.y_-=1;//Decrease x axis by 1
-        // std::cout << "postion x " << position_.x_ <<" postion y" << position_.y_ << "\n";
       }
       break;
     }
@@ -102,7 +191,6 @@ void RC::MoveForward(){
       }
       else{
         position_.x_+=1; //increase y axis by 1
-        // std::cout << "postion x: " << position_.x_ <<" postion y: " << position_.y_ << "\n";
       }
       break;
     }
@@ -113,25 +201,22 @@ void RC::MoveForward(){
       }
       else{
         position_.y_+=1; //increase x by 1
-        // std::cout << "postion x: " << position_.x_ <<" postion y: " << position_.y_ << "\n";
       }
       break;
     }
 
     case Direction::West:{
-      if(position_.y_==0){
+      if(position_.x_==-1){
         std::cout << "ERROR: cannot move west"; //y will be out of bounds
       }
       else{
         position_.x_-=1; //Decrease y by 1
-        // std::cout << "postion x: " << position_.x_ <<" postion y: " << position_.y_ << "\n";
       }
       break;
     }
   }
   PopulateBoard();
   DrawRCCar();
-  Show();
 }
 
 void RC::MoveBack(){
@@ -180,7 +265,6 @@ void RC::MoveBack(){
   }
   PopulateBoard();
   DrawRCCar();
-  Show();
 }
 
 void RC::TurnLeft(){
@@ -205,7 +289,6 @@ void RC::TurnLeft(){
   }
   PopulateBoard();
   DrawRCCar();
-  Show();
 }
 
 void RC::TurnRight(){
@@ -231,10 +314,9 @@ void RC::TurnRight(){
   }
   PopulateBoard();
   DrawRCCar();
-  Show();
 }
 
 void RC::Show(){
-  CAR->RCWorldImage().ShowForMs(3000,"RC World");
+  CAR->RCWorldImage().ShowForMs(1000,"RC World");
 }
 #endif

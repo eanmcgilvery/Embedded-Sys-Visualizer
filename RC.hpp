@@ -20,11 +20,9 @@ class RC{
     const int NumOfHorizontalLines_ = 20;
     const int NumOfVerticalLines_ = 20;
 
-
     //Car Variables
     DirectionAndOrientation position_;
     int Speed_;
-
 
   public: 
     RC() = delete;
@@ -45,17 +43,17 @@ class RC{
     DirectionAndOrientation positions();
     int pxPerCell();
 
-    
+    //Board Updates
     void PopulateBoard();
-    void DrawRCCar();
-    void DrawRCCar(int,int);
+    void DrawRCCar(); //Helper Function
+    void DrawRCCar(int,int); 
+    void Show();
 
     //Car Movements
     void MoveForward();
     void MoveBack();
     void TurnLeft();
     void TurnRight();
-    void Show();
   
 };
 
