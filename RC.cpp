@@ -28,43 +28,50 @@ DirectionAndOrientation RC::positions(){ return position_; }
 
 int RC::pxPerCell(){ return pxPerCell_; }
 
-
+//Populate RCGraphics Board
 void RC::PopulateBoard(){
-  //color constants
-  const graphics::Color kWallColor(50, 50, 50);
-  const graphics::Color backGroundColor(245,245,245);
-  const graphics::Color green1(18,148,71);
-  const graphics::Color green2(39,159,0);
+  if(UsingRCGraphics_){
+    //color constants
+    const graphics::Color kWallColor(50, 50, 50);
+    const graphics::Color backGroundColor(245,245,245);
+    const graphics::Color green1(143,202,92);
+    const graphics::Color green2(112,178,55);
 
-  CAR->RCWorldImage().DrawRectangle(0,0,XDim_-1,YDim_-1,backGroundColor);
-  //Horizontal Lines
-  for(int i = 0; i <YDim_/pxPerCell_;i++){
-    int x = pxPerCell_*NumOfHorizontalLines_-1;
-    int y = i*pxPerCell_;
-    // std::cout << "X: " << x << " Y: " << y << "\n";
-    CAR->RCWorldImage().DrawLine(0,y,x,y,kWallColor,wallThickness_);
-    if(y%100== 0)
-      CAR->RCWorldImage().DrawRectangle(0,y,x,pxPerCell_,green1);
-    else
-      CAR->RCWorldImage().DrawRectangle(0,y,x,pxPerCell_,green2);
-    
-  }
+    CAR->RCWorldImage().DrawRectangle(0,0,XDim_-1,YDim_-1,backGroundColor);
+    //Horizontal Lines
+    for(int i = 0; i <YDim_/pxPerCell_;i++){
+      int x = pxPerCell_*NumOfHorizontalLines_-1;
+      int y = i*pxPerCell_;
+      CAR->RCWorldImage().DrawLine(0,y,x,y,kWallColor,wallThickness_);
+      if(y%100== 0)
+        CAR->RCWorldImage().DrawRectangle(0,y,x,pxPerCell_,green1);
+      else
+        CAR->RCWorldImage().DrawRectangle(0,y,x,pxPerCell_,green2);
+      
+    }
 
-  //Verticle Lines
-  for(int i = 0; i < XDim_/pxPerCell_;i++){
-    int x = i*pxPerCell_;
-    int y = pxPerCell_*NumOfVerticalLines_-1;
-    CAR->RCWorldImage().DrawLine(x,0,x,y,kWallColor,wallThickness_);
+    //Verticle Lines
+    for(int i = 0; i < XDim_/pxPerCell_;i++){
+      int x = i*pxPerCell_;
+      int y = pxPerCell_*NumOfVerticalLines_-1;
+      CAR->RCWorldImage().DrawLine(x,0,x,y,kWallColor,wallThickness_);
+    }
   }
+  
 }
 
+//Helper Function for DrawRCCar (for graphics)
 void RC::DrawRCCar(){
-  DrawRCCar(position_.x_ * pxPerCell_ + pxPerCell_ / 2,
-            position_.y_* pxPerCell_ + pxPerCell_ / 2);
+  if(UsingRCGraphics_){
+    DrawRCCar(position_.x_ * pxPerCell_ + pxPerCell_ / 2,
+              position_.y_* pxPerCell_ + pxPerCell_ / 2);
+  }
 }
 
+//DrawRCCar on graphics board
 void RC::DrawRCCar(int x_pixel, int y_pixel){
 
+  //depending on the direction the car is facing print out a certain pixel image to the board
   switch(position_.orientation_){
     case Direction::North:{
       
@@ -172,151 +179,162 @@ void RC::DrawRCCar(int x_pixel, int y_pixel){
   Show();
 }
 
+//Move Car Forward one space
 void RC::MoveForward(){
-  switch(position_.orientation_){
+  if(UsingRCGraphics_){
+    switch(position_.orientation_){
+        case Direction::North:{
+          if(position_.y_==-1){
+            std::cout << "ERROR cannot move north\n"; //x will be out of bounds
+          }
+          else{
+            position_.y_-=1;//Decrease x axis by 1
+          }
+          break;
+        }
 
-    case Direction::North:{
-      if(position_.y_==-1){
-        std::cout << "ERROR cannot move north\n"; //x will be out of bounds
-      }
-      else{
-        position_.y_-=1;//Decrease x axis by 1
-      }
-      break;
-    }
+        case Direction::East:{
+          if(position_.x_==YDim_-1){
+            std::cout << "ERROR cannot move east\n"; //y will be out of bounds
+          }
+          else{
+            position_.x_+=1; //increase y axis by 1
+          }
+          break;
+        }
 
-    case Direction::East:{
-      if(position_.x_==YDim_-1){
-        std::cout << "ERROR cannot move east\n"; //y will be out of bounds
-      }
-      else{
-        position_.x_+=1; //increase y axis by 1
-      }
-      break;
-    }
+        case Direction::South:{
+          if(position_.y_==XDim_-1){
+            std::cout << "ERROR: cannot move south"; //x will be out of bounds
+          }
+          else{
+            position_.y_+=1; //increase x by 1
+          }
+          break;
+        }
 
-    case Direction::South:{
-      if(position_.y_==XDim_-1){
-        std::cout << "ERROR: cannot move south"; //x will be out of bounds
+        case Direction::West:{
+          if(position_.x_==-1){
+            std::cout << "ERROR: cannot move west"; //y will be out of bounds
+          }
+          else{
+            position_.x_-=1; //Decrease y by 1
+          }
+          break;
+        }
       }
-      else{
-        position_.y_+=1; //increase x by 1
-      }
-      break;
-    }
-
-    case Direction::West:{
-      if(position_.x_==-1){
-        std::cout << "ERROR: cannot move west"; //y will be out of bounds
-      }
-      else{
-        position_.x_-=1; //Decrease y by 1
-      }
-      break;
-    }
+      PopulateBoard();
+      DrawRCCar();
   }
-  PopulateBoard();
-  DrawRCCar();
 }
 
+//Move Car backward one space
 void RC::MoveBack(){
+  if(UsingRCGraphics_){
+    switch(position_.orientation_){
+        case Direction::North:{
+          if(position_.x_==0){
+            std::cout << "ERROR cannot move north\n"; //x will be out of bounds
+          }
+          else{
+            position_.y_+=1;//Increase y axis by 1
+          }
+          break;
+        }
 
-  switch(position_.orientation_){
+        case Direction::East:{
+          if(position_.y_==YDim_-1){
+            std::cout << "ERROR cannot move east\n"; //y will be out of bounds
+          }
+          else{
+            position_.x_-=1; //decrease x axis by 1
+          }
+          break;
+        }
 
-    case Direction::North:{
-      if(position_.x_==0){
-        std::cout << "ERROR cannot move north\n"; //x will be out of bounds
-      }
-      else{
-        position_.y_+=1;//Increase y axis by 1
-      }
-      break;
-    }
+        case Direction::South:{
+          if(position_.x_==XDim_-1){
+            std::cout << "ERROR: cannot move south"; //x will be out of bounds
+          }
+          else{
+            position_.y_-=1; //Decrease y by 1
+          }
+          break;
+        }
 
-    case Direction::East:{
-      if(position_.y_==YDim_-1){
-        std::cout << "ERROR cannot move east\n"; //y will be out of bounds
+        case Direction::West:{
+          if(position_.y_==0){
+            std::cout << "ERROR: cannot move west"; //y will be out of bounds
+          }
+          else{
+            position_.x_+=1; //Increase x by 1
+          }
+          break;
+        }
       }
-      else{
-        position_.x_-=1; //decrease x axis by 1
-      }
-      break;
-    }
-
-    case Direction::South:{
-      if(position_.x_==XDim_-1){
-        std::cout << "ERROR: cannot move south"; //x will be out of bounds
-      }
-      else{
-        position_.y_-=1; //Decrease y by 1
-      }
-      break;
-    }
-
-    case Direction::West:{
-      if(position_.y_==0){
-        std::cout << "ERROR: cannot move west"; //y will be out of bounds
-      }
-      else{
-        position_.x_+=1; //Increase x by 1
-      }
-      break;
-    }
+      PopulateBoard();
+      DrawRCCar();
   }
-  PopulateBoard();
-  DrawRCCar();
 }
 
+//Turn Car Left
 void RC::TurnLeft(){
-
-  switch(position_.orientation_){
-    case Direction::North:{
-      position_.orientation_=Direction::West;
-      break;
+  if(UsingRCGraphics_){
+    //given what the current direction of the car, the car will change the direction appropriatly 
+    switch(position_.orientation_){
+      case Direction::North:{
+        position_.orientation_=Direction::West;
+        break;
+      }
+      case Direction::East:{
+        position_.orientation_=Direction::North;
+        break;
+      }
+      case Direction::South:{
+        position_.orientation_=Direction::East;
+        break;
+      }
+      case Direction::West:{
+        position_.orientation_=Direction::South;
+        break;
+      }
     }
-    case Direction::East:{
-      position_.orientation_=Direction::North;
-      break;
-    }
-    case Direction::South:{
-      position_.orientation_=Direction::East;
-      break;
-    }
-    case Direction::West:{
-      position_.orientation_=Direction::South;
-      break;
-    }
+    PopulateBoard();
+    DrawRCCar();
   }
-  PopulateBoard();
-  DrawRCCar();
 }
 
+//Changing the direction of the car to turn right
 void RC::TurnRight(){
-
-  switch(position_.orientation_){
-    case Direction::North:{
-      position_.orientation_=Direction::East;
-      
-      break;
-    }
-    case Direction::East:{
-      position_.orientation_=Direction::South;
-      break;
-    }
-    case Direction::South:{
-      position_.orientation_=Direction::West;
-      break;
-    }
-    case Direction::West:{
-      position_.orientation_=Direction::North;
-      break;
-    }
+  if(UsingRCGraphics_){
+    switch(position_.orientation_){
+        case Direction::North:{
+          position_.orientation_=Direction::East;
+          
+          break;
+        }
+        case Direction::East:{
+          position_.orientation_=Direction::South;
+          break;
+        }
+        case Direction::South:{
+          position_.orientation_=Direction::West;
+          break;
+        }
+        case Direction::West:{
+          position_.orientation_=Direction::North;
+          break;
+        }
+      }
+      PopulateBoard();
+      DrawRCCar();
   }
-  PopulateBoard();
-  DrawRCCar();
 }
 
+//displays the Car on the board for a certain ms
 void RC::Show(){
-  CAR->RCWorldImage().ShowForMs(1000,"RC World");
+  if(UsingRCGraphics_){
+    CAR->RCWorldImage().ShowForMs(Speed_,"RC World");
+  }
 }
 #endif

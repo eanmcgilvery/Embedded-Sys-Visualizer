@@ -5,13 +5,13 @@
 #include "cpputils/graphics/image.h"
 #include "cpputils/graphics/image_event.h"
 
-//LOOP MACRO 
+// LOOP MACRO 
 // #define RC_LOOP(num_of_iterations) for(int i = 0; i < num_of_ierations; i++)
 
 //will initialize the graphics library
-void RC_initialize(std::string fileName, bool usingRC){
+void RC_initialize(std::string fileName, bool usingRCGraphics){
   CAR->SetFileName(fileName);
-  CAR->SetRC(usingRC);
+  CAR->SetRC(usingRCGraphics);
 
   if(CAR->GetRC() == true){
     CAR->RCWorldImage().Initialize(CAR->YDim(), CAR->XDim());
@@ -19,7 +19,9 @@ void RC_initialize(std::string fileName, bool usingRC){
 } 
 
 void RC_finalize(){
-  CAR->RCWorldImage().ShowUntilClosed("COMPLETE");
+  if(CAR->GetRC() == true){
+    CAR->RCWorldImage().ShowUntilClosed("COMPLETE");
+  }
 }
 
 void RC_accelerate(){

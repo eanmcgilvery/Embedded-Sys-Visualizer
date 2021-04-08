@@ -22,7 +22,7 @@ class RC{
 
     //Car Variables
     DirectionAndOrientation position_;
-    int Speed_;
+    int Speed_ = 1000;
 
   public: 
     RC() = delete;
