@@ -14,7 +14,7 @@ void RC_initialize(std::string fileName, bool usingRCGraphics){
   CAR->SetRC(usingRCGraphics);
 
   if(CAR->GetRC() == true){
-    CAR->RCWorldImage().Initialize(CAR->YDim(), CAR->XDim());
+    CAR->RCWorldImage().Initialize(CAR->XDim()*CAR->pxPerCell()+1, CAR->YDim()*CAR->pxPerCell()+1);
   }
 } 
 

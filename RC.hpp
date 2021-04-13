@@ -17,8 +17,6 @@ class RC{
     int XDim_;
     int YDim_;
     const int wallThickness_ = 3;
-    const int NumOfHorizontalLines_ = 20;
-    const int NumOfVerticalLines_ = 20;
 
     //Car Variables
     DirectionAndOrientation position_;
@@ -57,5 +55,5 @@ class RC{
   
 };
 
-std::unique_ptr<RC> CAR(new RC(1000,1000)); //GLOBAL VARIABLE
+std::unique_ptr<RC> CAR(new RC(5,8)); //GLOBAL VARIABLE
 #endif

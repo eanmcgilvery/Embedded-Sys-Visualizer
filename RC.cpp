@@ -37,24 +37,28 @@ void RC::PopulateBoard(){
     const graphics::Color green1(143,202,92);
     const graphics::Color green2(112,178,55);
 
-    CAR->RCWorldImage().DrawRectangle(0,0,XDim_-1,YDim_-1,backGroundColor);
+    // std::cout << XDim_-1 <<" "<< YDim_ -1 << "\n";
+    CAR->RCWorldImage().DrawRectangle(0,0,XDim_*pxPerCell_-1,YDim_*pxPerCell_-1,backGroundColor);
     //Horizontal Lines
-    for(int i = 0; i <YDim_/pxPerCell_;i++){
-      int x = pxPerCell_*NumOfHorizontalLines_-1;
-      int y = i*pxPerCell_;
-      CAR->RCWorldImage().DrawLine(0,y,x,y,kWallColor,wallThickness_);
+    // std::cout << "xDim " << XDim_*pxPerCell_-1 << " yDim " << YDim_*pxPerCell_-1 << "\n";
+    for (int i = 0; i <= YDim_; i++) {
+      // Draw horizontal lines and indexes.
+      int x = pxPerCell_ * XDim_;
+      int y = i * pxPerCell_;
+      // std::cout << "x " << x << " y " << y << "\n";
+      CAR->RCWorldImage().DrawLine(0, y, x, y, kWallColor, wallThickness_);
       if(y%100== 0)
         CAR->RCWorldImage().DrawRectangle(0,y,x,pxPerCell_,green1);
       else
         CAR->RCWorldImage().DrawRectangle(0,y,x,pxPerCell_,green2);
-      
+    
     }
-
-    //Verticle Lines
-    for(int i = 0; i < XDim_/pxPerCell_;i++){
-      int x = i*pxPerCell_;
-      int y = pxPerCell_*NumOfVerticalLines_-1;
-      CAR->RCWorldImage().DrawLine(x,0,x,y,kWallColor,wallThickness_);
+    for (int i = 0; i <= XDim_; i++) {
+      // Draw vertical lines and indexes.
+      int x = i * pxPerCell_;
+      int y = pxPerCell_ * YDim_;
+      CAR->RCWorldImage().DrawLine(x, 0, x, y, kWallColor, wallThickness_);
+      
     }
   }
   
@@ -80,7 +84,7 @@ void RC::DrawRCCar(int x_pixel, int y_pixel){
       const int heightOffset = 32;
 
       graphics::Image upCarImage;
-      upCarImage.Load("/Users/janeenyamak/Documents/Embedded-Sys-Visualizer/resources/up.bmp");
+      upCarImage.Load("./resources/up.bmp");
 
       graphics::Color black(0,0,0);
 
@@ -107,7 +111,7 @@ void RC::DrawRCCar(int x_pixel, int y_pixel){
       const int heightOffset = 30;
 
       graphics::Image rightCarImage;
-      rightCarImage.Load("/Users/janeenyamak/Documents/Embedded-Sys-Visualizer/resources/right.bmp");
+      rightCarImage.Load("./resources/right.bmp");
 
       graphics::Color black(0,0,0);
 
@@ -132,7 +136,7 @@ void RC::DrawRCCar(int x_pixel, int y_pixel){
       const int heightOffset = 30;
       
       graphics::Image leftCarImage;
-      leftCarImage.Load("/Users/janeenyamak/Documents/Embedded-Sys-Visualizer/resources/left.bmp");
+      leftCarImage.Load("./resources/left.bmp");
 
       graphics::Color black(0,0,0);
 
@@ -157,7 +161,7 @@ void RC::DrawRCCar(int x_pixel, int y_pixel){
       const int heightOffset = 30;
 
       graphics::Image downCarImage;
-      downCarImage.Load("/Users/janeenyamak/Documents/Embedded-Sys-Visualizer/resources/down.bmp");
+      downCarImage.Load("./resources/down.bmp");
 
       graphics::Color black(0,0,0);
 
