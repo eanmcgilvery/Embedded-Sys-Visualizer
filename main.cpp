@@ -9,36 +9,25 @@ EXECUTE CODE: ./main
 int main(){
   
 
-  RC_initialize("file.txt", true);
-  CreateWorld();
-  DrawRC();
-  RCTurnRight();
-  RCMoveForward();
-  RCMoveForward();
-  RCMoveForward();
-  RCTurnRight();
-  RCMoveForward();
-  RCMoveForward();
-  RCTurnRight();
-  RCMoveForward();
-  RCMoveForward();
-  RCTurnRight();
-  
-  LOOP(2){
-    RCMoveForward();
-  }
-  RCTurnRight();
-  RCMoveForward();
-  RCMoveForward();
-  RCTurnRight();
-  LOOP(4){
-    RCMoveForward();
-  }
-  RCMoveBackward();
-  RCTurnRight();
+  RC_initialize("file.txt", "./worlds/10x10.w", true);
   RCTurnLeft();
   RCMoveForward();
+  RCMoveForward();
+  RCMoveForward();
+  // RCTurnRight();
+  
   RCTurnRight();
+  RCMoveForward();
+  RCMoveForward();
+  RCTurnRight();
+  // LOOP(2){
+  //   RCMoveForward();
+  // }
+  // RCMoveBackward();
+  // RCTurnRight();
+  // RCTurnLeft();
+  // RCMoveForward();
+  // RCTurnRight();
   RC_finalize();
   return 0;
 }

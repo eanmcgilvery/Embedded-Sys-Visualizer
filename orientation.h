@@ -14,7 +14,7 @@ enum Direction{
 struct DirectionAndOrientation{
   int x_ = 0;
   int y_ = 0;
-  Direction orientation_ = Direction::North;
+  Direction orientation_ = Direction::East;
 };
 
 #endif 

@@ -12,6 +12,5 @@ void RCMoveForward(); //will move rc forward an N number of cells
 void RCMoveBackward(); //will move rc backwards an N number of cells
 void RCAccelerate(); //will increase animaion speed by 50 ms DONE. 
 void RCDecelerate(); //will decrease animation speed b 50 ms DONE. 
-void CreateWorld(); //will create the graphics world
-void DrawRC();
+
 #endif 

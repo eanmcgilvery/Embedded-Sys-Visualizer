@@ -9,12 +9,12 @@
 // #define RC_LOOP(num_of_iterations) for(int i = 0; i < num_of_ierations; i++)
 
 //will initialize the graphics library
-void RC_initialize(std::string fileName, bool usingRCGraphics){
+void RC_initialize(std::string fileName, std::string obstaclesFileName, bool usingRCGraphics){
   CAR->SetFileName(fileName);
   CAR->SetRC(usingRCGraphics);
 
   if(CAR->GetRC() == true){
-    CAR->RCWorldImage().Initialize(CAR->XDim()*CAR->pxPerCell()+1, CAR->YDim()*CAR->pxPerCell()+1);
+    CAR->Initialize(obstaclesFileName);
   }
 } 
 
@@ -32,15 +32,6 @@ void RC_accelerate(){
 void RC_decelerate(){
   const int decelerateSpeed = 50; //ms
   CAR->SetSpeed(CAR->Speed()+decelerateSpeed);
-}
-
-void CreateWorld(){
-  CAR->PopulateBoard();
-}
-
-void DrawRC(){
-  CAR->DrawRCCar(CAR->positions().x_*CAR->pxPerCell()+CAR->pxPerCell()/2,
-                 CAR->positions().y_*CAR->pxPerCell()+CAR->pxPerCell()/2);
 }
 
 void RCMoveForward(){
