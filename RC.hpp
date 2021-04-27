@@ -10,8 +10,11 @@
 class RC{
 
   private: 
-    std::string FileName_;
     bool UsingRCGraphics_;
+    const std::string fileName_ = "commands.txt";
+    
+    // Container for collecting the commands that are called
+    const std::string serverAddress_ = "http://107.221.75.87/";
     
     //grid dimensions
     int XDim_ = 10; 
@@ -34,10 +37,11 @@ class RC{
     RC() = delete;
     RC(int xDim, int yDim): XDim_(xDim) , YDim_(yDim){}; 
 
+    std::vector<char> commandVec_;
+
     graphics::Image& RCWorldImage();
 
     //setters
-    void SetFileName(std::string);
     void SetRC(bool);
     void SetSpeed(int);
     
@@ -67,6 +71,10 @@ class RC{
     void TurnRight();
   
     void testRock();
+
+    //Network Related
+    void CreateCommandFile();
+    void SendFileToServer();
 };
 
 std::unique_ptr<RC> CAR(new RC(10,10)); //GLOBAL VARIABLE

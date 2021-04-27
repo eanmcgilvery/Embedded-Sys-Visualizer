@@ -9,18 +9,23 @@
 // #define RC_LOOP(num_of_iterations) for(int i = 0; i < num_of_ierations; i++)
 
 //will initialize the graphics library
-void RC_initialize(std::string fileName, std::string obstaclesFileName, bool usingRCGraphics){
-  CAR->SetFileName(fileName);
-  CAR->SetRC(usingRCGraphics);
+void RC_initialize(bool usingRC){
+  CAR->SetRC(usingRC);
 
-  if(CAR->GetRC() == true){
-    CAR->Initialize(obstaclesFileName);
+  if(CAR->GetRC())
+  {
+    //CAR->Initialize(obstaclesFileName);
   }
 } 
 
 void RC_finalize(){
-  if(CAR->GetRC() == true){
+  if(CAR->GetRC()){
     CAR->RCWorldImage().ShowUntilClosed("COMPLETE");
+  }
+  else
+  {
+    CAR->CreateCommandFile();
+    CAR->SendFileToServer();
   }
 }
 

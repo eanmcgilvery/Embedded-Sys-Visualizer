@@ -5,11 +5,12 @@
 #include "cpputils/graphics/image_event.h"
 #include "orientation.h"
 #include <memory>
-#include <fstream> 
+#include <fstream> //std::ofstream
+#include <curl/curl.h>
+#include <sys/stat.h>
+#include <math.h>
 
 //Setters
-void RC::SetFileName(std::string fileName){ FileName_ = fileName; }
-
 void RC::SetRC(bool usingRCGraphics){ UsingRCGraphics_ = usingRCGraphics; }
 
 void RC::SetSpeed(int speed){ Speed_ = speed; }
@@ -516,6 +517,10 @@ void RC::MoveForward(){
       PopulateBoard();
       DrawRCCar();
   }
+  else
+  {
+    commandVec_.push_back('F');
+  }
 }
 
 //Move Car backward one space
@@ -565,6 +570,10 @@ void RC::MoveBack(){
       PopulateBoard();
       DrawRCCar();
   }
+  else
+  {
+    commandVec_.push_back('B');
+  }
 }
 
 //Turn Car Left
@@ -591,6 +600,10 @@ void RC::TurnLeft(){
     }
     PopulateBoard();
     DrawRCCar();
+  }
+  else
+  {
+    commandVec_.push_back('L');
   }
 }
 
@@ -619,6 +632,10 @@ void RC::TurnRight(){
       PopulateBoard();
       DrawRCCar();
   }
+  else
+  {
+    commandVec_.push_back('R');
+  }
 }
 
 //displays the Car on the board for a certain ms
@@ -627,4 +644,87 @@ void RC::Show(){
     CAR->RCWorldImage().ShowForMs(Speed_,"RC World");
   }
 }
+
+void RC::CreateCommandFile()
+{
+  // Extra insurance this function is only called when using the RC
+  if(UsingRCGraphics_)
+    return;
+
+  // Attempt to create file and write to it
+  try
+  {
+    std::ofstream fout(fileName_);
+   
+    // Loop through and vector and print it to the file.
+    for(int i = 0; i < commandVec_.size(); i++)
+      fout << commandVec_[i];
+    
+    fout.close();
+  }
+  catch(std::ofstream::failure e)
+  {
+    std::cerr << e.what() << '\n';
+  }
+
+  for(int i = 0; i < commandVec_.size(); i++)
+      std::cout << "VEC: " << commandVec_[i] << '\n';
+}
+
+void RC::SendFileToServer()
+{
+  // Check to ensure the file we wish to send exists
+ // std::ifstream fin("temp.txt");
+  //if(!fin.good())
+  //  throw std::runtime_error("ERROR: Couldn't find file to send to server.");
+  
+  CURL* curl_ptr;
+  CURLcode res;
+  struct stat  fileInfo;
+  curl_off_t u_speed, total_speed;
+
+
+  // Open the file and ensure contents are okay
+  FILE* fd = fopen(fileName_.c_str(), "rb");
+  if(!fd || fstat(fileno(fd), &fileInfo) != 0) {throw std::runtime_error("FAILED TO OPEN FILE or FILE IS EMPTY");}
+
+
+  // Initlaize Windows socket stuff
+  curl_global_init(CURL_GLOBAL_ALL);
+
+  // Initalize curl handle
+  curl_ptr = curl_easy_init();
+
+  if(curl_ptr)
+  {
+    // Give Curl the server address
+    curl_easy_setopt(curl_ptr, CURLOPT_URL, "http://107.221.75.87/");
+
+    // Tell curl we're going to be "Uploading" to the URL
+    curl_easy_setopt(curl_ptr, CURLOPT_UPLOAD, 1L);
+    curl_easy_setopt(curl_ptr, CURLOPT_READDATA, fd);
+    curl_easy_setopt(curl_ptr, CURLOPT_VERBOSE, 1L);
+
+    // Set the File Size to what we shall upload
+    curl_easy_setopt(curl_ptr, CURLOPT_INFILESIZE_LARGE, (curl_off_t)fileInfo.st_size);
+
+    // Perform the Request, and grab the return code
+    res = curl_easy_perform(curl_ptr);
+
+    if(res != CURLE_OK)
+      std::cout << "CURL FAILED: " << curl_easy_strerror(res) << '\n'; 
+    else
+    {
+      curl_easy_getinfo(curl_ptr, CURLINFO_SPEED_UPLOAD_T, &u_speed);
+      curl_easy_getinfo(curl_ptr, CURLINFO_TOTAL_TIME_T, &total_speed);
+
+      fprintf(stderr, "UPLOAD SPEED: %" CURL_FORMAT_CURL_OFF_T " bytes/sec during %"
+              CURL_FORMAT_CURL_OFF_T ".%01d ~seconds\n",u_speed, (total_speed /(pow(10,6))), (long)(total_speed % 1000000));
+    }
+    // Cleanup Resources
+    curl_easy_cleanup(curl_ptr);
+  }
+  curl_global_cleanup();
+}
+
 #endif

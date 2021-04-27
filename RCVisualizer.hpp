@@ -4,7 +4,7 @@
 #include "cpputils/graphics/image.h"
 #include "cpputils/graphics/image_event.h"
 
-void RC_initialize(std::string, bool); //will initialize the graphics library
+void RC_initialize(bool); //will initialize the graphics library
 void RC_finalize(); //will stop animaion.
 void RCTurnRight(); //will move he rc 90 degrees to right 
 void RCTurnLeft(); //will move the rc 90 degress to left
