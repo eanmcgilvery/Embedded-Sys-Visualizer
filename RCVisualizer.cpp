@@ -9,12 +9,12 @@
 // #define RC_LOOP(num_of_iterations) for(int i = 0; i < num_of_ierations; i++)
 
 //will initialize the graphics library
-void RC_initialize(bool usingRC){
+void RC_initialize(bool usingRC,std::string obstaclesFileName){
   CAR->SetRC(usingRC);
 
   if(CAR->GetRC())
   {
-    //CAR->Initialize(obstaclesFileName);
+    CAR->Initialize(obstaclesFileName);
   }
 } 
 
