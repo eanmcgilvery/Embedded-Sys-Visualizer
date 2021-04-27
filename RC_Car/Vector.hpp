@@ -6,12 +6,21 @@ template <typename DATA>
 class Vector
 {
   public:
+    // Constructor
     Vector();
     ~Vector();
+    Vector(const Vector<DATA>&);
+    
     void push_back(DATA);
     void display_contents();
+    int size() {return size_;}
+    void clear();
 
-    int getSize() {return size_;}
+    // Operator Overloads
+    DATA operator[](int);
+    bool operator>(const Vector<DATA>&);
+    void operator=(const Vector<DATA>&);
+    
   private:
     DATA* arr_;
     int size_;
@@ -35,6 +44,20 @@ Vector<DATA>::~Vector()
 {
   delete [] arr_;
   arr_ = nullptr;
+}
+
+template <typename DATA>
+Vector<DATA>::Vector(const Vector<DATA>& rhs)
+{
+  this->capacity_ = rhs.capacity_;
+  this->size_ = rhs.size_;
+
+  this->arr_ = new DATA[capacity_];
+
+  for (int i = 0; i < size_; i++)
+  {
+    this->arr_[i] = rhs.arr_[i];
+  }
 }
 
 template <typename DATA>
@@ -73,5 +96,48 @@ void Vector<DATA>::resize()
 
   // Assign our class variable to point to new array
   arr_ = newArr;
+}
+
+template <typename DATA>
+void Vector<DATA>::clear()
+{
+  delete [] arr_;
+  Vector();
+}
+
+template <typename DATA>
+DATA Vector<DATA>::operator[](int index)
+{
+  return arr_[index];
+}
+
+
+template <typename DATA>
+bool Vector<DATA>::operator>(const Vector<DATA>& rhs)
+{
+  for (int i = 0; i < size_; i++)
+  {
+    int l = this->arr_[i] - '0';
+    int r = rhs.arr_[i] - '0';
+    if(l > r)
+      return true;
+  }
+  return false;
+}
+
+template <typename DATA>
+void Vector<DATA>::operator=(const Vector<DATA>& rhs)
+{
+  delete [] arr_;
+
+  this->capacity_ = rhs.capacity_;
+  this->size_ = rhs.size_;
+
+  this->arr_ = new DATA[capacity_];
+
+  for (int i = 0; i < size_; i++)
+  {
+    this->arr_[i] = rhs.arr_[i];
+  }
 }
 #endif // VECTOR_H
