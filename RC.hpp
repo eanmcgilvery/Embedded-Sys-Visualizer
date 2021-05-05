@@ -1,3 +1,36 @@
+/*MIT License
+
+Copyright (c) 2021 Ean McGilvery, Janeen Yamak
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+*/
+
+/*************************************************************************************************
+* File: RC.hpp
+* Description:
+*       This file contains the creation of the RC object and all of the prototypes
+*       Requires C++ 14 or later (Smart Pointers)
+*
+**************************************************************************************************/
+
+
 #ifndef RC_H
 #define RC_H
 #include "cpputils/graphics/image.h"
@@ -48,7 +81,7 @@ class RC{
     //getters
     int XDim();
     int YDim();
-    bool GetRC();
+    bool UsingGraphics();
     int Speed();
     DirectionAndOrientation positions();
     int pxPerCell();
