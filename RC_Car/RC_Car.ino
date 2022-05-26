@@ -3,8 +3,8 @@
 #include "vector.hpp"
 
 // WIFI Settings 
-const char ssid[] = "Emac";//"Ebola-Take-The-Wheel"; //"FiOS-WDRJY";          // Change this to your Wifi settings
-const char pass[] = "eanisagod"; //"way79mouth4146pay";  //"St4yS3cure1";   // Change this to your Wifi settings 
+const char ssid[] = ""; // Change this to your Wifi settings
+const char pass[] = ""; // Change this to your Wifi settings 
 int status = WL_IDLE_STATUS; // Used to check connection Statuses 
 WiFiClient client;
 
